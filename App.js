@@ -1,21 +1,19 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+import React from 'react'
+import PlacesNavigator from './navigation/PlacesNavigator';
+import {createStore,applyMiddleware,combineReducers} from 'redux'
+import {Provider} from 'react-redux'
+import ReduxThunk from 'redux-thunk'
+import placesReducer from './store/PlacesReducer'
+import {init} from './helpers/db.js'
+init().then(()=>{console.log('initialised database')}).catch((err)=>{console.log(err)
+  console.log('failed')
 });
+const rootReducer=combineReducers({
+  places:placesReducer
+})
+const store = createStore(rootReducer,applyMiddleware(ReduxThunk))
+export default function App(){
+
+  
+  return <Provider store={store}><PlacesNavigator/></Provider>
+}
